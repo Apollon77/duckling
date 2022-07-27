@@ -132,12 +132,12 @@ jobs:
 
       - name: Set binary path name
         id: set-binary-path-name
-        run: echo "::set-output name=BINARY_PATH::./dist/duckling-example-exe${{ steps.build-windows-exe.EXT }}"
+        run: echo "::set-output name=BINARY_PATH::./dist/duckling-example-exe${{ steps.build-windows-exe.outputs.EXT }}"
 
       - name: Compress binary
         uses: svenstaro/upx-action@2.0.1
         with:
-          file: ${{ steps.set-binary-path-name.BINARY_PATH }}
+          file: ${{ steps.set-binary-path-name.outputs.BINARY_PATH }}
 
 #      - name: Load Release URL File from release job
 #        uses: actions/download-artifact@v1
