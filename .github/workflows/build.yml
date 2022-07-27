@@ -45,6 +45,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
+        stack: ["2.5.1"]
         cabal: [ "3.6.2.0" ]
         ghc:
           - "8.10.7"
@@ -73,15 +74,16 @@ jobs:
           tagRegexGroup: 1
 
       - name: Setup Haskell
-        uses: haskell/actions/setup@v1.2
+        uses: haskell/actions/setup@v1
         id: setup-haskell-cabal
         with:
           ghc-version: ${{ matrix.ghc }}
           cabal-version: ${{ matrix.cabal }}
+          stack-version: ${{ matrix.stack }}
 
-      - name: Install dependencies
+      - name: Build
         run: |
-          cabal build all --only-dependencies
+          stack build duckling:lib --system-ghc --test --bench --no-run-tests --no-run-benchmarks
 
       - name: Freeze
         run: |
