@@ -19,24 +19,39 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-#      - name: Create Release
-#        id: create_release
-#        uses: actions/create-release@v1.1.1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          tag_name: ${{ github.ref }}
-#          release_name: Release ${{ github.ref }}
-#          draft: true
-#          prerelease: false
+      - name: Determine the version bump
+        if: steps.changes.outputs.result == 'ok'
+        id: version
+        uses: actions/github-script@v6
+        with:
+          result-encoding: string
+          script: |
+              const dateStr = today.toISOString().split("T")[0].replace(/-/g, "");
+              const sha = require("child_process").execSync("git rev-parse --short HEAD").toString("utf8").trim();
+    
+              const version =  `${dateStr}-${sha}`;
+    
+              return version;
 
-#      - name: Output Release URL File
-#        run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
-#      - name: Save Release URL File for publish
-#        uses: actions/upload-artifact@v1
-#        with:
-#          name: release_url
-#          path: release_url.txt
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1.1.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.version.outputs.result }}
+          release_name: Release v${{ steps.version.outputs.result }}
+          draft: true
+          prerelease: true
+          body: 'binary build pseudo release'
+
+      - name: Output Release URL File
+        run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
+      - name: Save Release URL File for publish
+        uses: actions/upload-artifact@v1
+        with:
+          name: release_url
+          path: release_url.txt
 
   build_artifact:
     needs: [create_release]
@@ -139,23 +154,23 @@ jobs:
         with:
           file: ${{ steps.set-binary-path-name.outputs.BINARY_PATH }}
 
-#      - name: Load Release URL File from release job
-#        uses: actions/download-artifact@v1
-#        with:
-#          name: release_url
+      - name: Load Release URL File from release job
+        uses: actions/download-artifact@v1
+        with:
+          name: release_url
 
-#      - name: Get Release File Name & Upload URL
-#        id: get_release_info
-#        run: |
-#          echo "::set-output name=upload_url::$(cat release_url/release_url.txt)"
+      - name: Get Release File Name & Upload URL
+        id: get_release_info
+        run: |
+          echo "::set-output name=upload_url::$(cat release_url/release_url.txt)"
 
-#      - name: Upload Release Asset
-#        id: upload-release-asset
-#        uses: actions/upload-release-asset@v1.0.1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-#          asset_path: ${{ env.BINARY_PATH }}
-#          asset_name: stan-${{ steps.tag.outputs.tag }}-${{ runner.os }}-ghc-${{ matrix.ghc }}${{ env.EXT }}
-#          asset_content_type: application/octet-stream
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+          asset_path: ${{ env.BINARY_PATH }}
+          asset_name: stan-${{ steps.tag.outputs.tag }}-${{ runner.os }}-ghc-${{ matrix.ghc }}${{ env.EXT }}
+          asset_content_type: application/octet-stream
