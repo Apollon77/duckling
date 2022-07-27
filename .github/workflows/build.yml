@@ -7,7 +7,9 @@ on:
       - "v*"
     branches:
       - "*"
-
+    schedule:
+      # additionally run once per week (At 00:00 on Sunday) to maintain cache
+      - cron: '0 0 * * 0'
 jobs:
   create_release:
     name: Create Github Release
@@ -42,13 +44,21 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
+        cabal: [ "3.6.2.0" ]
         ghc:
-          - "8.8.3"
-          - "8.10.1"
-        cabal: ["3.2"]
+          - "8.10.7"
+          - "9.0.2"
+          - "9.2.1"
         exclude:
+          - os: macOS-latest
+            ghc: 9.0.2
+          - os: macOS-latest
+            ghc: 8.10.7
+
           - os: windows-latest
-            ghc: 8.8.3
+            ghc: 9.0.2
+          - os: windows-latest
+            ghc: 8.10.7
 
     steps:
       - name: Check out code
@@ -62,7 +72,7 @@ jobs:
           tagRegexGroup: 1
 
       - name: Setup Haskell
-        uses: actions/setup-haskell@v1.1.1
+        uses: haskell/actions/setup@v1.2
         id: setup-haskell-cabal
         with:
           ghc-version: ${{ matrix.ghc }}
@@ -73,7 +83,7 @@ jobs:
           cabal freeze
 
       - name: Cache ~/.cabal/store
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ${{ steps.setup-haskell-cabal.outputs.cabal-store }}
           key: ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}
