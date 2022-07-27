@@ -81,9 +81,9 @@ jobs:
           cabal-version: ${{ matrix.cabal }}
           stack-version: ${{ matrix.stack }}
 
-#      - name: Build
-#        run: |
-#          stack build duckling:lib --system-ghc --test --bench --no-run-tests --no-run-benchmarks
+      - name: Build
+        run: |
+          stack build duckling:lib --system-ghc --test --bench --no-run-tests --no-run-benchmarks
 
 #      - name: Freeze
 #        run: |
