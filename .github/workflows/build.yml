@@ -48,6 +48,20 @@ jobs:
         stack: ["2.5.1"]
         cabal: [ "3.6.2.0" ]
         ghc: ["8.6.5", "8.8.4", "8.10.3", "9.0.1"]
+        exclude:
+          - os: macOS-latest
+            ghc: 8.10.3
+          - os: macOS-latest
+            ghc: 8.8.4
+          - os: macOS-latest
+            ghc: 8.6.5
+
+          - os: windows-latest
+            ghc: 8.10.3
+          - os: windows-latest
+            ghc: 8.8.4
+          - os: windows-latest
+            ghc: 8.6.5
 #        ghc:
 #          - "8.10.7"
 #          - "9.0.2"
