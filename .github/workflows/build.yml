@@ -25,12 +25,14 @@ jobs:
         with:
           result-encoding: string
           script: |
-              const dateStr = today.toISOString().split("T")[0].replace(/-/g, "");
-              const sha = require("child_process").execSync("git rev-parse --short HEAD").toString("utf8").trim();
-    
-              const version =  `${dateStr}-${sha}`;
-    
-              return version;
+            const now = new Date();
+            const today = new Date(now.getTime() - now.getTimezoneOffset()*60000);
+            const dateStr = today.toISOString().split("T")[0].replace(/-/g, "");
+            const sha = require("child_process").execSync("git rev-parse --short HEAD").toString("utf8").trim();
+  
+            const version =  `${dateStr}-${sha}`;
+  
+            return version;
 
       - name: Create Release
         id: create_release
