@@ -6,7 +6,7 @@ on:
     tags:
       - "v*"
     push:
-      branches: *
+      branches: "*"
 
 jobs:
   create_release:
