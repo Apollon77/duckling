@@ -21,7 +21,24 @@ jobs:
           image_additional_mb: 1024
           base_image: raspios_lite_arm64:latest
           commands: |
-            wget -qO- https://get.haskellstack.org/ | sh
+            sudo apt-get update
+            sudo apt-get upgrade -y
+            wget http://downloads.haskell.org/%7Eghc/9.0.1/ghc-9.0.1-aarch64-deb9-linux.tar.xz
+            tar xf ghc-9.0.1-aarch64-deb9-linux.tar.xz
+            cd ghc-9.0.1/
+            ./configure --prefix=/usr/local
+            make install
+            cd ..
+            ghc --version
+            apt install libgmp-dev
+            wget https://github.com/llvm/llvm-project/releases/download/llvmorg-14.0.6/clang+llvm-14.0.6-aarch64-linux-gnu.tar.xz
+            tar xf clang+llvm-14.0.6-aarch64-linux-gnu.tar.xz
+            cd clang+llvm-14.0.6-aarch64-linux-gnu/
+            cp -r * /usr/local/
+            apt install git
+            git clone https://github.com/haskell/cabal.git
+            cd cabal/cabal-install/
+            EXTRA_CONFIGURE_OPTS="" ./bootstrap.sh
             cabal build all --only-dependencies
             stack build duckling:lib --system-ghc --test --bench --no-run-tests --no-run-benchmarks
             mkdir dist
