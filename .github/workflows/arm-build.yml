@@ -1,0 +1,28 @@
+name: Release
+
+on:
+  # Trigger the workflow on the new 'v*' tag created
+  push:
+    workflow_dispatch: # Manually on demand
+    tags:
+      - "v*"
+    branches:
+      - "*"
+    schedule:
+      # additionally run once per week (At 00:00 on Sunday) to maintain cache
+      - cron: '0 0 * * 0'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: pguyot/arm-runner-action@v2
+        with:
+          image_additional_mb: 1024
+          base_image: raspios_lite:latest
+          commands: |
+            wget -qO- https://get.haskellstack.org/ | sh
+            cabal build all --only-dependencies
+            stack build duckling:lib --system-ghc --test --bench --no-run-tests --no-run-benchmarks
+            mkdir dist
+            cabal install exe:duckling-example-exe --install-method=copy --overwrite-policy=always --installdir=dist

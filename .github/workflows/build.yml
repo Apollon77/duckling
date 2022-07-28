@@ -7,7 +7,7 @@ on:
     tags:
       - "v*"
     branches:
-      - "*"
+      - "master"
     schedule:
       # additionally run once per week (At 00:00 on Sunday) to maintain cache
       - cron: '0 0 * * 0'
@@ -173,5 +173,5 @@ jobs:
         with:
           upload_url: ${{ steps.get_release_info.outputs.upload_url }}
           asset_path: ${{ steps.set-binary-path-name.outputs.BINARY_PATH }}
-          asset_name: stan-${{ steps.tag.outputs.tag }}-${{ runner.os }}-ghc-${{ matrix.ghc }}${{ steps.build-windows-exe.outputs.EXT }}
+          asset_name: duckling-example-exe-${{ steps.tag.outputs.tag }}-${{ runner.os }}-ghc-${{ matrix.ghc }}${{ steps.build-windows-exe.outputs.EXT }}
           asset_content_type: application/octet-stream
