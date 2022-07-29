@@ -19,7 +19,7 @@ jobs:
       - uses: pguyot/arm-runner-action@v2
         with:
           image_additional_mb: 8192
-          base_image: raspios_lite_arm64:latest
+          base_image: raspios_lite:latest
           cpu: cortex-a7
           commands: |
             apt-get -y update
