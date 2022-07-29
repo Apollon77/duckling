@@ -22,21 +22,6 @@ jobs:
           base_image: dietpi:rpi_armv8_bullseye
           commands: |
             apt install -y libgmp-dev libnuma-dev libncurses5 build-essential curl libffi-dev libffi7 libgmp10 libtinfo5 -y
-            wget -q http://downloads.haskell.org/%7Eghc/9.2.2/ghc-9.2.2-aarch64-deb10-linux.tar.xz
-            tar xf ghc-9.2.2-aarch64-deb10-linux.tar.xz
-            rm ghc-9.2.2-aarch64-deb10-linux.tar.xz
-            cd ghc-9.2.2/
-            ./configure --prefix=/usr/local
-            make install
-            cd ..
-            rm -rf ghc-9.2.2/
-            ghc --version
-            wget -q https://github.com/llvm/llvm-project/releases/download/llvmorg-14.0.6/clang+llvm-14.0.6-aarch64-linux-gnu.tar.xz
-            tar xf clang+llvm-14.0.6-aarch64-linux-gnu.tar.xz
-            ls -la
-            cd clang+llvm-14.0.6-aarch64-linux-gnu/
-            cp -r * /usr/local/
-            apt install git
-            git clone https://github.com/haskell/cabal.git
-            cd cabal/cabal-install/
-            EXTRA_CONFIGURE_OPTS="" ./bootstrap.sh
+            add-apt-repository ppa:hvr/ghc
+            apt update
+            apt install ghc cabal-install -y
