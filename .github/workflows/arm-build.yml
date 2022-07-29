@@ -26,6 +26,7 @@ jobs:
             tar xf ghc-9.0.1-aarch64-deb9-linux.tar.xz
             rm ghc-9.0.1-aarch64-deb9-linux.tar.xz
             cd ghc-9.0.1/
+            sed -i -e 's/HAVE_OFD_LOCKING], \[1]/HAVE_OFD_LOCKING], \[0]/g' libraries/base/configure.ac
             ./configure --prefix=/usr/local
             make install
             cd ..
