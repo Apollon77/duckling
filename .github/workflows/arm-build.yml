@@ -19,10 +19,7 @@ jobs:
       - uses: pguyot/arm-runner-action@v2
         with:
           image_additional_mb: 8192
-          base_image: dietpi:rpi_armv8_bullseye
+          base_image: raspios_lite_arm64:latest
           commands: |
             apt update -y
-            apt install -y software-properties-common
-            add-apt-repository ppa:hvr/ghc
-            apt update
-            apt install -y ghc cabal-install
+            apt install -y ghc, cabal-install
