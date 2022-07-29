@@ -22,7 +22,7 @@ jobs:
           base_image: dietpi:rpi_armv8_bullseye
           commands: |
             apt update -y
-            apt install software-properties-common
+            apt install -y software-properties-common
             add-apt-repository ppa:hvr/ghc
             apt update
-            apt install ghc cabal-install -y
+            apt install -y ghc cabal-install
