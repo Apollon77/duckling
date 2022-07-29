@@ -23,7 +23,7 @@ jobs:
           cpu: cortex-a7
           commands: |
             apt-get -y update
-            apt-get -y install llvm-9
+            apt-get -y install llvm-9 libgmp-dev libnuma-dev libncurses5
             wget -q http://downloads.haskell.org/%7Eghc/9.2.2/ghc-9.2.2-armv7-deb10-linux.tar.xz
             tar xf ghc-9.2.2-armv7-deb10-linux.tar.xz
             rm ghc-9.2.2-armv7-deb10-linux.tar.xz
