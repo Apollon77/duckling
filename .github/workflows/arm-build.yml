@@ -19,7 +19,7 @@ jobs:
       - uses: pguyot/arm-runner-action@v2
         with:
           image_additional_mb: 8192
-          base_image: raspios_lite_arm64:latest
+          base_image: dietpi:rpi_armv8_bullseye
           commands: |
             apt install -y libgmp-dev libnuma-dev libncurses5 build-essential curl libffi-dev libffi7 libgmp10 libtinfo5 -y
             wget -q http://downloads.haskell.org/%7Eghc/9.2.2/ghc-9.2.2-aarch64-deb10-linux.tar.xz
