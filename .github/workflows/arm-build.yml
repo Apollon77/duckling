@@ -19,7 +19,15 @@ jobs:
       - uses: pguyot/arm-runner-action@v2
         with:
           image_additional_mb: 8192
-          base_image: dietpi:rpi_armv8_bullseye
+          base_image: raspios_lite_arm64:latest
+          cpu: cortex-a7
           commands: |
-            curl -sSL https://get.haskellstack.org/ | sh
-
+            apt-get -y update
+            apt-get -y install llvm-9
+            wget -q http://downloads.haskell.org/%7Eghc/9.2.2/ghc-9.2.2-armv7-deb9-linux.tar.xz
+            tar xf ghc-9.2.2-armv7-deb9-linux.tar.xz
+            rm ghc-9.2.2-armv7-deb9-linux.tar.xz
+            cd ghc-9.2.2/
+            ./configure CONF_CC_OPTS_STAGE2="-marm -march=armv7-a" CFLAGS="-marm -march=armv7-a"
+            make install
+            ghc --version
